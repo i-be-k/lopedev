@@ -2,6 +2,7 @@
     "name": "lopedev-server",
     "version": "1.0.0",
     "main": "dist/index.ts",
+    "type": "module",
     "scripts": {
         "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
         "build": "tsc"

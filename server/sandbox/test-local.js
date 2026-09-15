@@ -11,39 +11,39 @@ const __dirname = path.dirname(__filename);
 
 async function runLocalSandboxTest() {
     const testId = "local-test-" + Date.now();
-     // Target a folder right inside your working directory
+    // Target a folder right inside your working directory
     const tmpDir = path.resolve(__dirname, `tmp-${testId}`);
 
     console.log(`⏳ Setting up sandbox workspace folder at: ${tmpDir}`);
     fs.mkdirSync(tmpDir, { recursive: true });
 
     // 1. Define a standard Python function (Simulating developer code entry)
-    const userCodeStr = `def multiply_numbers(a, b):
-        return a * b`;
+    const userCodeStr = [
+        'def multiply_numbers(a, b):',
+        '    return a * b'
+    ].join('\n');
 
     // 2. Define the hidden unit test block (Simulating your automated grader logic)
-    const hiddenTestStr = `import unittest
-    from app import multiply_numbers
+    const hiddenTestStr = [
+        'import unittest',
+        'from app import multiply_numbers',
+        '',
+        'class TestMathSuite(unittest.TestCase):',
+        '    def test_multiplication(self):',
+        '        self.assertEqual(multiply_numbers(5, 5), 25)',
+        '        self.assertEqual(multiply_numbers(-1, 4), -4)',
+        '',
+        "if __name__ == '__main__':",
+        '    unittest.main()'
+    ].join('\n');
 
-    class TestMathSuite(unittest.TestCase):
-        def test_multiplication(self):
-            self.assertEqual(multiply_numbers(5, 5), 25)
-            self.assertEqual(multiply_numbers(-1, 4), -4)
+    // Write files to disk
+    fs.writeFileSync(path.join(tmpDir, 'app.py'), userCodeStr);
+    fs.writeFileSync(path.join(tmpDir, 'hidden_tests.py'), hiddenTestStr);
 
-    if __name__ == '__main__':
-        unittest.main()`;
+    // Convert Windows drive paths to Linux format for Docker
+    const dockerMountPath = tmpDir.replace(/\\/g, '/');
 
-    // Write files to host directory
-    fs.writeFileSync(path.join(tmpDir, 'app.py'), userCodeStr.trim());
-    fs.writeFileSync(path.join(tmpDir, 'hidden_tests.py'), hiddenTestStr.trim());
-
-    // Convert Windows backslashes to forward slashes for Docker compatibility
-    let dockerMountPath = tmpDir.replace(/\\/g, '/');
-    if (dockerMountPath.match(/^[A-Za-z]:/)) {
-        dockerMountPath = '/' + dockerMountPath[0].toLowerCase() + dockerMountPath.substring(2);
-    }
-
-    // 3. Construct the execution statement with environment path escape variables
     const dockerCmd = `docker run --rm --network none --memory 256m -v "${dockerMountPath}:/workspace" sandbox-engine:latest`;
 
     console.log(`🚀 Spawning ephemeral sandbox container instance...`);
@@ -53,7 +53,7 @@ async function runLocalSandboxTest() {
         await execPromise(dockerCmd, {
             env: { ...process.env, MSYS_NO_PATHCONV: '1' }
         });
-    
+
         // Read the results file written back to your host by the container
         const resultPath = path.join(tmpDir, 'results.json');
         if (fs.existsSync(resultPath)) {
@@ -64,7 +64,7 @@ async function runLocalSandboxTest() {
             console.log(`❌ Error: Container exited without writing results.json layer.`);
         }
     } catch (error) {
-        console.error(`❌ Container Runtime Fault Exception:`, error.message);
+        console.error(`❌ Container Runtime Fault Exception:\n`, error.message);
     } finally {
         // Clean up local temp test directories
         console.log(`\n🧹 Cleaning temporary directory footprints...`);
