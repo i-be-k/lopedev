@@ -27,7 +27,7 @@ export default function LoginPortal() {
         <div className="min-h-screen bg-slate-950 flex flex-col justify-center items-center p-4">
             <div className="w-full max-w-md bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl">
                 <div className="text-center mb-8">
-                    <h1 className="text-3xl font-black text-white tracking-tight">ALX Intranet</h1>
+                    <h1 className="text-3xl font-black text-white tracking-tight">LopeDev Intranet</h1>
                     <p className="text-slate-400 text-sm mt-2">Sign in to unlock your active developer tier task curriculum.</p>
                 </div>
 

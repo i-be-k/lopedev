@@ -30,7 +30,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    "server/src/middleware/authMiddleware.ts"
   ],
   "exclude": ["node_modules"]
 }
