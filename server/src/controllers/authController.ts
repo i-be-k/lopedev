@@ -27,8 +27,12 @@ export const handleUserRegistration = async (req: Request, res: Response) => {
             assignedSpecialty: newUserProfile.assignedSpecialty
         };
 
-        const sessionToken = jwt.sign(jwtPayload, String(config.auth.jwtSecret), {
-            expiresIn: Number(config.auth.jwtExpiresIn),
+        const tokenExpiryTime = config.auth.jwtExpiresIn && typeof config.auth.jwtExpiresIn === 'string' && config.auth.jwtExpiresIn.trim() !== ''
+            ? config.auth.jwtExpiresIn 
+            : '7d';
+
+        const sessionToken = jwt.sign(jwtPayload, config.auth.jwtSecret, {
+            expiresIn: tokenExpiryTime as jwt.SignOptions['expiresIn'],
         });
 
         console.log(`[Auth Engine] Account deployed successfully. Registered User ID: ${newUserProfile.id}`);
@@ -72,9 +76,13 @@ export const handleUserLogin = async (req: Request, res: Response) => {
             assignedSpecialty: validatedUser.assignedSpecialty
         };
 
+        const tokenExpiryTime = config.auth.jwtExpiresIn && typeof config.auth.jwtExpiresIn === 'string' && config.auth.jwtExpiresIn.trim() !== ''
+            ? config.auth.jwtExpiresIn 
+            : '7d';
+
         // Sign and issue immutable cryptographically signed JWT strings
-        const sessionToken = jwt.sign(jwtPayload, String(config.auth.jwtSecret), {
-            expiresIn: Number(config.auth.jwtExpiresIn),
+        const sessionToken = jwt.sign(jwtPayload, config.auth.jwtSecret, {
+            expiresIn: tokenExpiryTime as jwt.SignOptions['expiresIn'],
         });
 
         console.log(`[Auth Engine] Token successfully compiled for User: ${validatedUser.id} [Tier: ${validatedUser.experienceTier}]`);
