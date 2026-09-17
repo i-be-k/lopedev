@@ -2,9 +2,11 @@
     "cSpell.words": [
         "addgroup",
         "adduser",
+        "Millis",
         "MSYS",
         "PATHCONV",
         "sandboxgroup",
-        "sandboxuser"
+        "sandboxuser",
+        "supersecurepassword"
     ]
 }
