@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import jwt from 'jsonwebtoken';
-import { config } from '../config/env';
-import { AuthService } from '../services/authService';
+import { config } from '../config/env.js';
+import { AuthService } from '../services/authService.js';
 
 export const handleUserRegistration = async (req: Request, res: Response) => {
     try {
