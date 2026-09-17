@@ -38,7 +38,7 @@ export const config = {
         name: process.env.DB_NAME,
     },
     auth: {
-        jwtSecret: process.env.JWT_SECRET || "fallback_secret",
+        jwtSecret: process.env.JWT_SECRET || "lWjj2vz/FTV7WOC4qyxOUEHw7obD9nTADhkMqBIcU0g=",
         jwtExpiresIn: process.env.JWT_EXPIRES_IN || "7d",
         githubSecret: process.env.GITHUB_WEBHOOK_SECRET || "",
     },
