@@ -1,4 +1,4 @@
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api/v1';
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0';
 
 export async function fetchWithAuth(endpoint: string, options: RequestInit = {}) {
     // Pull the secure cryptographically signed session token string out of storage
@@ -18,7 +18,7 @@ export async function fetchWithAuth(endpoint: string, options: RequestInit = {})
 
     if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.error || `HTTP request failure status code: ${response.status}`);
+        throw new Error(errorData.error || `HTTP Error response code: ${response.status}`);
     }
 
     return response.json();
